@@ -1,4 +1,4 @@
-import sys
+import sys 
 sys.path.append('src/')
 
 from image_detector import ImageDetector
@@ -31,17 +31,27 @@ class TestImageDetector(unittest.TestCase):
 
     '''
     def test_get_image_labels(self):
-        expected_labels = ['Event', 'Ceremony', 'Alcohol', 'Happy', 'Drink', 'Leisure', 'Party', 'Fashion accessory', 'Conversation', 'Taste']
+        expected_labels = ['Event', 'Ceremony', 'Alcohol', 'Happy', 'Drink',
+                           'Leisure', 'Party', 'Fashion accessory', 'Conversation', 'Taste']
         labels = self.image_detector.get_image_labels()
         self.assertListEqual(expected_labels, labels)
 
     '''
-    #3 Create a test function that can detect object from an image. Look at the test above.
+    #3 This function tests the object detection 
     '''
 
+    def test_get_image_objects(self):
+        expected_labels = []
+        labels = self.image_detector.get_image_objects()
+        self.assertListEqual(expected_labels, labels)
+
     '''
-    #3 Create a test function that can detect object from an image. Look at the test above.
+    #4 This function tests the face detection 
     '''
+    def test_get_image_faces(self):
+        expected_labels = []
+        labels = self.image_detector.get_image_faces()
+        self.assertListEqual(expected_labels, labels)
 
 if __name__ == "__main__":
     unittest.main()
