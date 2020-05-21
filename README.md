@@ -8,4 +8,8 @@ There is no need to create a virtual environment or install any libraries except
 ```
 # Running the test
 python test/test_image_detector.py
+
+# Running the tool with a given url
+python image_detector.py --image_url "https://images.pexels.com/photos/4019754/pexels-photo-4019754.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"
+
 ```
