@@ -46,7 +46,6 @@ class ImageDetector():
             result = requests.post(url=self.GOOGLE_VISION_API_URL, json=data)
 
             result = json.loads(result.text)["responses"][0]["labelAnnotations"]
-            result = [label["description"] for label in result]
             return result
         except:
             print("Error")
@@ -81,59 +80,10 @@ class ImageDetector():
 
             result = requests.post(url=self.GOOGLE_VISION_API_URL, json=data)
             result = json.loads(result.text)["responses"][0]["localizedObjectAnnotations"]
-            result = [obj["name"] for obj in result]
             return result
         except:
             print("Error")
             return []
-    '''
-    #4 Create a function that can detect face from an image. The function will return the list of faces detected within an image.
-       Note that first test must fail. Hint: def get_image_faces(self, ...): pass
-    '''
-
-    def get_image_faces(self, max_results=10):
-        # Trigger the google vision api to generate labelling
-        try:
-            data = {
-                "requests": [
-                    {
-                        "image": {
-                            "source": {
-                                "imageUri": self.image_url
-                            }
-                        },
-                        "features": [
-                            {
-                                "maxResults": max_results,
-                                "type": "FACE_DETECTION"
-                            }
-                        ]
-                    }
-                ]
-            }
-
-            result = requests.post(url=self.GOOGLE_VISION_API_URL, json=data)
-            # Preprocess data
-            result = json.loads(result.text)["responses"][0]["faceAnnotations"]
-            # Number of faces
-            number_of_faces = len(result)
-            # Count average emotion
-            joy_count = 0
-            sad_count = 0
-            neutral_count = 0
-            for item in result:
-                if item["joyLikelihood"] == "VERY_LIKELY" or item["joyLikelihood"] == "LIKELY": joy_count += 1
-                elif item["joyLikelihood"] == "VERY_UNLIKELY" or item["joyLikelihood"] == "UNLIKELY": sad_count += 1
-                else: neutral_count += 1
-            # Determine overall emotion
-            if joy_count > sad_count and joy_count > neutral_count:
-                return "happy"
-            elif sad_count > joy_count and sad_count > neutral_count:
-                return "not_joy"
-            elif neutral_count > joy_count and neutral_count > sad_count:
-                return "neutral"
-        except:
-            return "neutral"
 
     def set_image_url(self, image_url):
         self.image_url = image_url
@@ -150,11 +100,13 @@ if __name__ == "__main__":
     image_detector = ImageDetector(image_url=image_url)
     labels = image_detector.get_image_labels()
     objects = image_detector.get_image_objects()
-    emotion = image_detector.get_image_faces()
+    objects = [obj["name"] for obj in objects]
+    labels = [label["description"] for label in labels]
+    labels = list(dict.fromkeys(labels))
+    objects = list(dict.fromkeys(objects))
     print("=" * 100)
     print("Google Vision API Image Detector")
     print("=" * 100)
     print("Detected Labels: ", ", ".join(labels))
     print("Detected Objects: ", ", ".join(objects))
-    print("Detected Emotions: ", emotion)
     print("=" * 100)
